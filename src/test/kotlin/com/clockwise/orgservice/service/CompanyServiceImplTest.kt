@@ -54,7 +54,7 @@ class CompanyServiceImplTest @Autowired constructor(
 
         val savedCompany = assertSuccess(result)
         assertNotNull(savedCompany?.id)
-        assertEquals(newCompany.name, savedCompany?.name)
+        assertEquals(newCompany.name, savedCompany?.name + "asd")
         assertEquals(newCompany.description, savedCompany?.description)
     }
 
