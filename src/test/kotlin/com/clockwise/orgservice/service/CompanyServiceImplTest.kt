@@ -10,12 +10,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @SpringBootTest
+@ActiveProfiles("test")
 class CompanyServiceImplTest @Autowired constructor(
     private val companyService: CompanyService,
     private val flyway: Flyway
