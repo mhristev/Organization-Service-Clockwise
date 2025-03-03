@@ -5,6 +5,7 @@ import com.clockwise.orgservice.config.AbstractIntegrationTest
 import com.clockwise.orgservice.config.Result
 import com.clockwise.orgservice.domain.Company
 import kotlinx.coroutines.runBlocking
+import org.flywaydb.core.Flyway
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,13 +17,16 @@ import kotlin.test.assertTrue
 
 @SpringBootTest
 class CompanyServiceImplTest @Autowired constructor(
-    private val companyService: CompanyService
+    private val companyService: CompanyService,
+    private val flyway: Flyway
 ) : AbstractIntegrationTest() {
 
     private lateinit var testCompany: Company
 
     @BeforeEach
     fun setup() = runBlocking {
+        flyway.clean()
+        flyway.migrate()
         // Create a default company for most tests
         testCompany = createTestCompany("Default Company", "Default Description")
     }
