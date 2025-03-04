@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'organization-service/**'
   pull_request:
     branches:
       - main
+    paths:
+      - 'organization-service/**'
 
 jobs:
   test:
