@@ -11,6 +11,7 @@ fun Company.toCompanyDto() = CompanyDto(
     description = this.description
 )
 
+
 fun BusinessUnit.toBusinessUnitDto() = BusinessUnitDto(
     id = this.id,
     name = this.name,
