@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orgservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orgservice
+  template:
+    metadata:
+      labels:
+        app: orgservice
+    spec:
+      containers:
+        - name: orgservice
+          image: mhristev/orgservice:latest
+          env:
+            - name: SPRING_R2DBC_URL
+              value: r2dbc:postgresql://localhost:5432/orgservice
+            - name: SPRING_R2DBC_USERNAME
+              value: postgres
+            - name: SPRING_R2DBC_PASSWORD
+              value: changemeinprod!
+            - name: SPRING_FLYWAY_URL
+              value: jdbc:postgresql://localhost:5432/orgservice
+            - name: SPRING_FLYWAY_USER
+              value: postgres
+            - name: SPRING_FLYWAY_PASSWORD
+              value: changemeinprod!
+        - name: postgres
+          image: postgres:13
+          env:
+            - name: POSTGRES_DB
+              value: orgservice
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: changemeinprod!
+          ports:
+            - containerPort: 5432
