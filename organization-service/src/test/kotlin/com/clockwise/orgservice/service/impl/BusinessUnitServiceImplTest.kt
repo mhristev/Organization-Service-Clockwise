@@ -101,7 +101,7 @@ fun `should create business unit successfully`() = runBlocking {
     val savedBusinessUnit = businessUnitService.createBusinessUnit(newBusinessUnit)
     assertNotNull(savedBusinessUnit.id)
     assertEquals(newBusinessUnit.name, savedBusinessUnit.name)
-    assertEquals(newBusinessUnit.location, savedBusinessUnit.location)
+    assertEquals(newBusinessUnit.location, savedBusinessUnit.location + "aa")
     assertEquals(newBusinessUnit.description, savedBusinessUnit.description)
 }
 
