@@ -38,12 +38,13 @@ jobs:
           cache: 'gradle'
 
       - name: Grant execute permission for gradlew
+	working-directory: ./organization-service
         run: chmod +x gradlew
-#        working-directory: ./organization-service
 
       - name: Run tests
+	working-directory: ./organization-service
         run: ./gradlew test
-#        working-directory: ./organization-service
+
         env:
           SPRING_PROFILES_ACTIVE: test
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/org_service_db_test
