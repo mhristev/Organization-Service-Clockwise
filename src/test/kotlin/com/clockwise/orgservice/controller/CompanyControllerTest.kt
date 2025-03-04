@@ -49,7 +49,7 @@ class CompanyControllerIntegrationTest {
   val companyId = UUID.randomUUID().toString()
   val company = Company(
    id = companyId,
-   name = "Test Company",
+   name = "Test Companya",
    description = "A test company"
   )
   val expectedDto = CompanyDto(
