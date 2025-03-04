@@ -1,9 +1,6 @@
 package com.clockwise.orgservice.domain
-
-//import org.hibernate.validator.constraints.UUID
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
-import org.springframework.data.relational.core.mapping.Table
 
 
 data class BusinessUnit(
@@ -11,5 +8,5 @@ data class BusinessUnit(
     val name: String,
     val location: String,
     val description: String,
-    @Column("company_id") val companyId: Long
+    @Column("company_id") val companyId: String
 )

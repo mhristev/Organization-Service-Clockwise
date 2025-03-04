@@ -1,23 +1,27 @@
 package com.clockwise.orgservice.controller
 
 import com.clockwise.orgservice.domain.Company
+import com.clockwise.orgservice.domain.dto.BusinessUnitDto
 import com.clockwise.orgservice.domain.dto.CompanyDto
+import com.clockwise.orgservice.service.BusinessUnitService
 import com.clockwise.orgservice.service.CompanyService
+import com.clockwise.orgservice.toBusinessUnitDto
 import com.clockwise.orgservice.toCompanyDto
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.springframework.http.ResponseEntity
 import org.springframework.http.HttpStatus
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 
 @RestController
 @RequestMapping("/v1/companies")
 class CompanyController(
-    private val companyService: CompanyService
+    private val companyService: CompanyService,
+    private val businessUnitService: BusinessUnitService
 ) {
     @PostMapping
     @Transactional
@@ -55,9 +59,8 @@ class CompanyController(
 
     }
 
-//    @GetMapping("/{id}/restaurants")
-//    fun getCompanyRestaurants(@PathVariable id: UUID): ResponseEntity<Flow<Restaurant>> {
-//        // First check if company exists
-//        return ResponseEntity(restaurantService.getRestaurantsByCompanyId(id), HttpStatus.OK)
-//    }
+    @GetMapping("/{id}/business-units")
+    suspend fun getCompanyBusinessUnits(@PathVariable id: String): ResponseEntity<Flow<BusinessUnitDto>> = coroutineScope {
+        ResponseEntity(businessUnitService.getBusinessUnitsByCompanyId(id).map { it.toBusinessUnitDto() }, HttpStatus.OK)
+    }
 }
