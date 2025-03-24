@@ -3,6 +3,7 @@ package com.clockwise.orgservice.service.impl
 import com.clockwise.orgservice.domain.Company
 import com.clockwise.orgservice.repositories.CompanyRepository
 import com.clockwise.orgservice.service.CompanyService
+import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,5 +22,9 @@ class CompanyServiceImpl(private val companyRepository: CompanyRepository): Comp
 
     override suspend fun deleteCompany(id: String) {
        companyRepository.deleteById(id)
+    }
+
+    override fun getAllCompanies(): Flow<Company> {
+        return companyRepository.findAll()
     }
 }

@@ -32,6 +32,12 @@ class CompanyController(
         ResponseEntity(newCompany.await().toCompanyDto(), HttpStatus.CREATED)
     }
 
+    @GetMapping
+    suspend fun getAllCompanies(): ResponseEntity<Flow<CompanyDto>> = coroutineScope {
+        val companies = async { companyService.getAllCompanies().map { it.toCompanyDto() } }
+        ResponseEntity(companies.await(), HttpStatus.OK)
+    }
+
     @GetMapping("/{id}")
     suspend fun getCompanyById(@PathVariable id: String): ResponseEntity<CompanyDto> = coroutineScope {
         val company = async { companyService.getCompanyById(id) }

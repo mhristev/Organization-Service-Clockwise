@@ -1,5 +1,5 @@
 # Use official OpenJDK image
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jdk-alpine
 
 # Set working directory
 WORKDIR /app
@@ -12,3 +12,6 @@ EXPOSE 8080
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+
+

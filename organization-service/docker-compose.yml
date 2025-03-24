@@ -1,27 +1,33 @@
 services:
-  # Our PostgreSQL database
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_PORT: 8080
+      SPRING_R2DBC_URL: r2dbc:postgresql://db:5432/postgres
+      SPRING_R2DBC_USERNAME: postgres
+      SPRING_R2DBC_PASSWORD: changemeinprod!
+      SPRING_FLYWAY_URL: jdbc:postgresql://db:5432/postgres
+      SPRING_FLYWAY_USER: postgres
+      SPRING_FLYWAY_PASSWORD: changemeinprod!
+    depends_on:
+      - db
+    restart: always
+
   db:
-    # The Docker image of postgres -- we're using the latest.
     image: postgres:latest
-    # The ports to expose to the host container
-    # 5432 is the default PostgreSQL port
     ports:
       - "5432:5432"
-    # If we accidentally kill the running container, Docker Compose
-    # will restart it.
-    restart: always
-    # The PostgreSQL Docker container uses environment variables to
-    # read configuration, here we set the password.
-    # ⚠️ - Do no store plaintext passwords in source control. We
-    #      do so here as this is a tutorial.
     environment:
       POSTGRES_PASSWORD: changemeinprod!
-  adminer:
-    # The Docker image for Adminer, again using the latest.
-    image: adminer:latest
-    # Restart if killed.
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    volumes:
+      - postgres_data1:/var/lib/postgresql/data
     restart: always
-    # Adminer runs on 8080, we'll map that to 8888 as our
-    # app runs on 8080.
-    ports:
-      - 8888:8080
+
+volumes:
+  postgres_data1:
