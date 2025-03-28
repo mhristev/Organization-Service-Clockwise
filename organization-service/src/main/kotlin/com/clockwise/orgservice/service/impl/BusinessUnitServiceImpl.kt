@@ -2,23 +2,35 @@ package com.clockwise.orgservice.service.impl
 
 import com.clockwise.orgservice.domain.BusinessUnit
 import com.clockwise.orgservice.service.BusinessUnitService
+import com.clockwise.orgservice.service.KafkaService
 import org.springframework.stereotype.Service
 import com.clockwise.orgservice.repositories.BusinessUnitRepository
 import kotlinx.coroutines.flow.Flow
 
 @Service
-class BusinessUnitServiceImpl(private val repository: BusinessUnitRepository) : BusinessUnitService {
+class BusinessUnitServiceImpl(
+    private val repository: BusinessUnitRepository,
+    private val kafkaService: KafkaService
+) : BusinessUnitService {
 
     override suspend fun createBusinessUnit(businessUnit: BusinessUnit): BusinessUnit {
-        return repository.save(businessUnit)
+        val savedBusinessUnit = repository.save(businessUnit)
+        kafkaService.sendBusinessUnitCreatedMessage(savedBusinessUnit.id!!, savedBusinessUnit.name)
+        return savedBusinessUnit
     }
 
     override suspend fun updateBusinessUnit(businessUnit: BusinessUnit): BusinessUnit {
-        return repository.save(businessUnit)
+        val updatedBusinessUnit = repository.save(businessUnit)
+        kafkaService.sendBusinessUnitUpdatedMessage(updatedBusinessUnit.id!!, updatedBusinessUnit.name)
+        return updatedBusinessUnit
     }
 
     override suspend fun deleteBusinessUnit(id: String) {
-        repository.deleteById(id)
+        val businessUnit = repository.findById(id)
+        if (businessUnit != null) {
+            repository.deleteById(id)
+            kafkaService.sendBusinessUnitDeletedMessage(businessUnit.id!!, businessUnit.name)
+        }
     }
 
     override suspend fun getBusinessUnitById(id: String): BusinessUnit? {
