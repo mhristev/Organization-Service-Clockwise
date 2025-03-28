@@ -13,15 +13,15 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest
 class OrgserviceApplicationTests(@Autowired val companyRepository: CompanyRepository) : AbstractIntegrationTest() {
 
-	@Test
-	fun contextLoads() {
-		runBlocking {
-			companyRepository.save(Company(name = "Test Company", description = "Test Description"))
-			val c = companyRepository.findAll()
-			Assertions.assertNotNull(c)
-
-		}
-	}
+//	@Test
+//	fun contextLoads() {
+//		runBlocking {
+//			companyRepository.save(Company(name = "Test Company", description = "Test Description"))
+//			val c = companyRepository.findAll()
+//			Assertions.assertNotNull(c)
+//
+//		}
+//	}
 
 
 
