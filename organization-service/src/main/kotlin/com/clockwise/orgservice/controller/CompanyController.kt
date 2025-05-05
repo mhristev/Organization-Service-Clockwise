@@ -15,7 +15,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.HttpStatus
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
+import mu.KotlinLogging
 
+private val logger = KotlinLogging.logger {}
 
 @RestController
 @RequestMapping("/v1/companies")
@@ -26,6 +29,7 @@ class CompanyController(
     @PostMapping
     @Transactional
     suspend fun createCompany(@RequestBody company: Company): ResponseEntity<CompanyDto> = coroutineScope {
+        logger.info { "Received request to create company" }
         val newCompany = async {
             companyService.createCompany(company)
         }
@@ -40,6 +44,7 @@ class CompanyController(
 
     @GetMapping("/{id}")
     suspend fun getCompanyById(@PathVariable id: String): ResponseEntity<CompanyDto> = coroutineScope {
+        logger.info { "Received request to get company with ID: $id" }
         val company = async { companyService.getCompanyById(id) }
         val result = company.await()
         if (result != null) {
@@ -54,15 +59,16 @@ class CompanyController(
         @PathVariable id: String,
         @RequestBody company: Company
     ): ResponseEntity<CompanyDto> = coroutineScope {
+        logger.info { "Received request to update company with ID: $id" }
         val updatedCompany = async { companyService.updateCompany(id, company) }
         ResponseEntity(updatedCompany.await().toCompanyDto(), HttpStatus.OK)
     }
 
     @DeleteMapping("/{id}")
     suspend fun deleteCompany(@PathVariable id: String): ResponseEntity<Void> = coroutineScope {
+        logger.info { "Received request to delete company with ID: $id" }
         async { companyService.deleteCompany(id) }
         ResponseEntity(HttpStatus.NO_CONTENT)
-
     }
 
     @GetMapping("/{id}/business-units")

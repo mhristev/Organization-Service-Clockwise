@@ -1,33 +1,53 @@
+version: "3.8"
+
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
+    image: organization-service
+    container_name: organization-service-app-1
     ports:
-      - "8080:8080"
+      - "8082:8080"
     environment:
-      SERVER_PORT: 8080
-      SPRING_R2DBC_URL: r2dbc:postgresql://db:5432/postgres
-      SPRING_R2DBC_USERNAME: postgres
-      SPRING_R2DBC_PASSWORD: changemeinprod!
-      SPRING_FLYWAY_URL: jdbc:postgresql://db:5432/postgres
-      SPRING_FLYWAY_USER: postgres
-      SPRING_FLYWAY_PASSWORD: changemeinprod!
+      - SPRING_PROFILES_ACTIVE=metrics
+      - SPRING_R2DBC_URL=r2dbc:postgresql://db:5432/organization_service
+      - SPRING_R2DBC_USERNAME=postgres
+      - SPRING_R2DBC_PASSWORD=changemeinprod!
+      - SPRING_FLYWAY_URL=jdbc:postgresql://db:5432/organization_service
+      - SPRING_FLYWAY_USER=postgres
+      - SPRING_FLYWAY_PASSWORD=changemeinprod!
+      - KAFKA_BOOTSTRAP_SERVERS=kafka-1:9092
+      - LOGGING_CONFIG=classpath:log4j2.xml
+      - LOGGING_FILE_PATH=/app/logs
+    volumes:
+      - org-service-logs:/app/logs
     depends_on:
       - db
-    restart: always
+    networks:
+      - default
+      - kafka-network
 
   db:
-    image: postgres:latest
+    image: postgres:15
+    container_name: organization-service-db-1
     ports:
-      - "5432:5432"
+      - "5434:5432"
     environment:
-      POSTGRES_PASSWORD: changemeinprod!
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=changemeinprod!
+      - POSTGRES_DB=organization_service
     volumes:
-      - postgres_data1:/var/lib/postgresql/data
-    restart: always
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - default
+
+networks:
+  default:
+    name: organization-service-network
+  kafka-network:
+    external: true
 
 volumes:
-  postgres_data1:
+  pg_data:
+    driver: local
+  org-service-logs:
+    driver: local

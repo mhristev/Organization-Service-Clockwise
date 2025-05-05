@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} --- [%15.15t] %-40.40c{1.} : %m%n%ex</Property>
+        <Property name="APP_LOG_ROOT">/app/logs/organization-service</Property>
+        <Property name="SERVICE_NAME">organization-service</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <RollingFile name="JsonFile" fileName="${APP_LOG_ROOT}/application.json"
+                     filePattern="${APP_LOG_ROOT}/application-%d{yyyy-MM-dd}-%i.json">
+            <JsonTemplateLayout eventTemplateUri="classpath:EcsLayout.json" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB" />
+                <TimeBasedTriggeringPolicy interval="1" />
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <Socket name="LogstashSocket" host="logstash" port="5001" protocol="TCP">
+            <JsonLayout compact="true" eventEol="true">
+                <KeyValuePair key="service_name" value="${SERVICE_NAME}" />
+            </JsonLayout>
+        </Socket>
+
+        <Async name="AsyncFile" bufferSize="8192">
+            <AppenderRef ref="JsonFile" />
+        </Async>
+
+        <Async name="AsyncLogstash" bufferSize="8192">
+            <AppenderRef ref="LogstashSocket" />
+        </Async>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.clockwise.orgservice" level="DEBUG" additivity="false">
+            <AppenderRef ref="AsyncFile" />
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="AsyncLogstash" />
+        </Logger>
+        
+        <!-- Spring Reactive Web -->
+        <Logger name="org.springframework.web" level="INFO" additivity="false">
+            <AppenderRef ref="AsyncFile" />
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="AsyncLogstash" />
+        </Logger>
+        
+        <!-- Spring Data -->
+        <Logger name="org.springframework.data" level="INFO" additivity="false">
+            <AppenderRef ref="AsyncFile" />
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="AsyncLogstash" />
+        </Logger>
+        
+        <!-- R2DBC -->
+        <Logger name="io.r2dbc" level="INFO" additivity="false">
+            <AppenderRef ref="AsyncFile" />
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="AsyncLogstash" />
+        </Logger>
+        
+        <!-- Kafka -->
+        <Logger name="org.apache.kafka" level="INFO" additivity="false">
+            <AppenderRef ref="AsyncFile" />
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="AsyncLogstash" />
+        </Logger>
+        
+        <Root level="INFO">
+            <AppenderRef ref="AsyncFile" />
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="AsyncLogstash" />
+        </Root>
+    </Loggers>
+</Configuration> 

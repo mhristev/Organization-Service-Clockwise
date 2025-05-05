@@ -1,5 +1,5 @@
 # Use official OpenJDK image
-FROM eclipse-temurin:21-jdk-alpine
+FROM openjdk:21-slim
 
 # Set working directory
 WORKDIR /app
@@ -7,11 +7,14 @@ WORKDIR /app
 # Copy compiled JAR file
 COPY build/libs/*.jar app.jar
 
-# Expose port
+# Create logs directory for Log4j2
+RUN mkdir -p /app/logs/organization-service
+
+# Expose ports for metrics
 EXPOSE 8080
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=metrics", "-jar", "app.jar"]
 
 
 
