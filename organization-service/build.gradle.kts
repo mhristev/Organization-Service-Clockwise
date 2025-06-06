@@ -30,6 +30,16 @@ dependencies {
 		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
 	}
 	
+	// Add Spring Security and JWT dependencies
+	implementation("org.springframework.boot:spring-boot-starter-security") {
+		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+	}
+	implementation("org.springframework.security:spring-security-oauth2-resource-server")
+	implementation("org.springframework.security:spring-security-oauth2-jose")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server") {
+		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+	}
+	
 	// Add Spring Boot Log4j2 starter 
 	implementation("org.springframework.boot:spring-boot-starter-log4j2")
 	
