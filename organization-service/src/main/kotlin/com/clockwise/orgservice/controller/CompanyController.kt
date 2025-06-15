@@ -35,28 +35,23 @@ class CompanyController(
             "userId" to jwt.getClaimAsString("sub"),
             "email" to jwt.getClaimAsString("email"),
             "firstName" to jwt.getClaimAsString("given_name"),
-            "lastName" to jwt.getClaimAsString("family_name"),
-            "roles" to jwt.getClaimAsStringList("roles")
+            "lastName" to jwt.getClaimAsString("family_name")
         )
     }
     
     @PostMapping
-    @Transactional
     suspend fun createCompany(
         @RequestBody company: Company,
         authentication: Authentication
-    ): ResponseEntity<CompanyDto> = coroutineScope {
-        val userInfo = extractUserInfo(authentication)
-        logger.info { "User ${userInfo["email"]} (${userInfo["userId"]}) requested to create company: ${company.name}" }
-        
-        val newCompany = async {
-            companyService.createCompany(company)
-        }
-        ResponseEntity(newCompany.await().toCompanyDto(), HttpStatus.CREATED)
+    ): ResponseEntity<CompanyDto> {
+        logger.info("User ${authentication.name} requested to create company: ${company.name}")
+        val createdCompany = companyService.createCompany(company)
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCompany.toCompanyDto())
     }
 
     @GetMapping
     suspend fun getAllCompanies(authentication: Authentication): ResponseEntity<Flow<CompanyDto>> = coroutineScope {
+        // All authenticated users can view companies, but log access
         val userInfo = extractUserInfo(authentication)
         logger.info { "User ${userInfo["email"]} requested to get all companies" }
         
@@ -70,7 +65,7 @@ class CompanyController(
         authentication: Authentication
     ): ResponseEntity<CompanyDto> = coroutineScope {
         val userInfo = extractUserInfo(authentication)
-        logger.info { "User ${userInfo["email"]} requested to get company with ID: $id" }
+        logger.info { "User ${userInfo["email"]} requested company with ID: $id" }
         
         val company = async { companyService.getCompanyById(id) }
         val result = company.await()
@@ -86,24 +81,20 @@ class CompanyController(
         @PathVariable id: String,
         @RequestBody company: Company,
         authentication: Authentication
-    ): ResponseEntity<CompanyDto> = coroutineScope {
-        val userInfo = extractUserInfo(authentication)
-        logger.info { "User ${userInfo["email"]} requested to update company with ID: $id" }
-        
-        val updatedCompany = async { companyService.updateCompany(id, company) }
-        ResponseEntity(updatedCompany.await().toCompanyDto(), HttpStatus.OK)
+    ): ResponseEntity<CompanyDto> {
+        logger.info("User ${authentication.name} requested to update company: $id")
+        val updatedCompany = companyService.updateCompany(id, company)
+        return ResponseEntity.ok(updatedCompany.toCompanyDto())
     }
 
     @DeleteMapping("/{id}")
     suspend fun deleteCompany(
         @PathVariable id: String,
         authentication: Authentication
-    ): ResponseEntity<Void> = coroutineScope {
-        val userInfo = extractUserInfo(authentication)
-        logger.info { "User ${userInfo["email"]} requested to delete company with ID: $id" }
-        
-        async { companyService.deleteCompany(id) }
-        ResponseEntity(HttpStatus.NO_CONTENT)
+    ): ResponseEntity<Void> {
+        logger.info("User ${authentication.name} requested to delete company: $id")
+        companyService.deleteCompany(id)
+        return ResponseEntity.noContent().build()
     }
 
     @GetMapping("/{id}/business-units")
@@ -114,6 +105,9 @@ class CompanyController(
         val userInfo = extractUserInfo(authentication)
         logger.info { "User ${userInfo["email"]} requested business units for company ID: $id" }
         
-        ResponseEntity(businessUnitService.getBusinessUnitsByCompanyId(id).map { it.toBusinessUnitDto() }, HttpStatus.OK)
+        val businessUnits = async { 
+            businessUnitService.getBusinessUnitsByCompanyId(id).map { it.toBusinessUnitDto() }
+        }
+        ResponseEntity(businessUnits.await(), HttpStatus.OK)
     }
 }

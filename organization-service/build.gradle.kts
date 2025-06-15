@@ -40,6 +40,11 @@ dependencies {
 		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
 	}
 	
+	// Add Spring AOP for role validation aspects
+	implementation("org.springframework.boot:spring-boot-starter-aop") {
+		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+	}
+	
 	// Add Spring Boot Log4j2 starter 
 	implementation("org.springframework.boot:spring-boot-starter-log4j2")
 	
