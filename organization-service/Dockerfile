@@ -11,10 +11,10 @@ COPY build/libs/*.jar app.jar
 RUN mkdir -p /app/logs/organization-service
 
 # Expose ports for metrics
-EXPOSE 8080
+EXPOSE 8084
 
-# Run the application
-ENTRYPOINT ["java", "-Dspring.profiles.active=metrics", "-jar", "app.jar"]
+# Run the application with Docker profile
+ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]
 
 
 

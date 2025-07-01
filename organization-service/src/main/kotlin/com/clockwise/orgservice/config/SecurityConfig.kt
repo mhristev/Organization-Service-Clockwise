@@ -45,11 +45,11 @@ class SecurityConfig {
                     .pathMatchers("/actuator/**").permitAll()
                     .pathMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                    // Company endpoints - Role hierarchy: admin > manager > user
+                    // Company endpoints - Role hierarchy: admin > manager > employee
                     .pathMatchers(HttpMethod.POST, "/v1/companies").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.PUT, "/v1/companies/**").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.DELETE, "/v1/companies/**").hasRole("admin")
-                    // Business unit endpoints - Role hierarchy: admin > manager > user
+                    // Business unit endpoints - Role hierarchy: admin > manager > employee
                     .pathMatchers(HttpMethod.POST, "/v1/business-units").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.PUT, "/v1/business-units/**").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.DELETE, "/v1/business-units/**").hasRole("admin")
