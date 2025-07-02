@@ -50,6 +50,8 @@ class SecurityConfig {
                     .pathMatchers(HttpMethod.PUT, "/v1/companies/**").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.DELETE, "/v1/companies/**").hasRole("admin")
                     // Business unit endpoints - Role hierarchy: admin > manager > employee
+                    .pathMatchers(HttpMethod.GET, "/v1/business-units").hasAnyRole("admin", "manager", "employee")
+                    .pathMatchers(HttpMethod.GET, "/v1/business-units/**").hasAnyRole("admin", "manager", "employee")
                     .pathMatchers(HttpMethod.POST, "/v1/business-units").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.PUT, "/v1/business-units/**").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.DELETE, "/v1/business-units/**").hasRole("admin")

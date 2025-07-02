@@ -11,4 +11,5 @@ interface BusinessUnitService {
     suspend fun deleteBusinessUnit(id: String)
     suspend fun getBusinessUnitById(id: String): BusinessUnit?
     fun getBusinessUnitsByCompanyId(companyId: String): Flow<BusinessUnit>
+    fun getAllBusinessUnits(): Flow<BusinessUnit>
 }

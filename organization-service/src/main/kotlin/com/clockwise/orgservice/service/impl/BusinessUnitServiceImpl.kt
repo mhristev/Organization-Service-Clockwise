@@ -58,4 +58,9 @@ class BusinessUnitServiceImpl(
         return repository.findByCompanyId(companyId)
     }
 
+    override fun getAllBusinessUnits(): Flow<BusinessUnit> {
+        logger.debug { "Fetching all business units" }
+        return repository.findAll()
+    }
+
 }

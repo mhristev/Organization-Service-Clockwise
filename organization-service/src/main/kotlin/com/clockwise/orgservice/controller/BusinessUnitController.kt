@@ -31,6 +31,17 @@ class BusinessUnitController(
         )
     }
 
+    @GetMapping
+    suspend fun getAllBusinessUnits(
+        authentication: Authentication
+    ): ResponseEntity<Flow<BusinessUnitDto>> {
+        val userInfo = extractUserInfo(authentication)
+        logger.info { "User ${userInfo["email"]} requested all business units" }
+        
+        val businessUnits = businessUnitService.getAllBusinessUnits().map { it.toBusinessUnitDto() }
+        return ResponseEntity.ok(businessUnits)
+    }
+
     @PostMapping
     suspend fun createBusinessUnit(
         @RequestBody businessUnit: BusinessUnit,
