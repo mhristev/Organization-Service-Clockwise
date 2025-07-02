@@ -14,23 +14,23 @@
         <Logger name="com.clockwise.orgservice" level="DEBUG" additivity="false">
             <AppenderRef ref="Console" />
         </Logger>
-        
+
         <Logger name="org.springframework.web" level="INFO" additivity="false">
             <AppenderRef ref="Console" />
         </Logger>
-        
+
         <Logger name="org.springframework.data" level="INFO" additivity="false">
             <AppenderRef ref="Console" />
         </Logger>
-        
+
         <Logger name="io.r2dbc" level="INFO" additivity="false">
             <AppenderRef ref="Console" />
         </Logger>
-        
+
         <Logger name="org.apache.kafka" level="INFO" additivity="false">
             <AppenderRef ref="Console" />
         </Logger>
-        
+
         <Root level="INFO">
             <AppenderRef ref="Console" />
         </Root>
