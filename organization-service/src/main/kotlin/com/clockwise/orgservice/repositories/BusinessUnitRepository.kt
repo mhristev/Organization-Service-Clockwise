@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface BusinessUnitRepository : CoroutineCrudRepository<BusinessUnit, String> {
     fun findByCompanyId(companyId: String): Flow<BusinessUnit>
+    suspend fun deleteByCompanyId(companyId: String)
 }

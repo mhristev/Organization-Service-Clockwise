@@ -3,10 +3,12 @@ package com.clockwise.orgservice.controller
 import com.clockwise.orgservice.domain.Company
 import com.clockwise.orgservice.domain.dto.BusinessUnitDto
 import com.clockwise.orgservice.domain.dto.CompanyDto
+import com.clockwise.orgservice.domain.dto.CompanyWithBusinessUnitsDto
 import com.clockwise.orgservice.service.BusinessUnitService
 import com.clockwise.orgservice.service.CompanyService
 import com.clockwise.orgservice.toBusinessUnitDto
 import com.clockwise.orgservice.toCompanyDto
+import com.clockwise.orgservice.toCompanyWithBusinessUnitsDto
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -57,6 +59,17 @@ class CompanyController(
         
         val companies = async { companyService.getAllCompanies().map { it.toCompanyDto() } }
         ResponseEntity(companies.await(), HttpStatus.OK)
+    }
+
+    @GetMapping("/with-business-units")
+    suspend fun getAllCompaniesWithBusinessUnits(authentication: Authentication): ResponseEntity<Flow<CompanyWithBusinessUnitsDto>> = coroutineScope {
+        val userInfo = extractUserInfo(authentication)
+        logger.info { "User ${userInfo["email"]} requested to get all companies with business units" }
+        
+        val companiesWithBusinessUnits = async { 
+            companyService.getAllCompaniesWithBusinessUnits().map { it.toCompanyWithBusinessUnitsDto() }
+        }
+        ResponseEntity(companiesWithBusinessUnits.await(), HttpStatus.OK)
     }
 
     @GetMapping("/{id}")

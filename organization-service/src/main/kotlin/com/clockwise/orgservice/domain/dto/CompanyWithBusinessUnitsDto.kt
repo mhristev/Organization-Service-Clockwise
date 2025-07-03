@@ -1,9 +1,8 @@
 package com.clockwise.orgservice.domain.dto
 
-data class BusinessUnitDto(
+data class CompanyWithBusinessUnitsDto(
     val id: String? = null,
     val name: String,
-    val location: String,
     val description: String,
-    val companyId: String
-)
+    val businessUnits: List<BusinessUnitDto>
+) 

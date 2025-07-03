@@ -1,6 +1,7 @@
 package com.clockwise.orgservice.service
 
 import com.clockwise.orgservice.domain.Company
+import com.clockwise.orgservice.domain.CompanyWithBusinessUnits
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 
@@ -11,4 +12,5 @@ interface CompanyService {
     suspend fun updateCompany(id: String, company: Company): Company
     suspend fun deleteCompany(id: String)
     fun getAllCompanies(): Flow<Company>
+    fun getAllCompaniesWithBusinessUnits(): Flow<CompanyWithBusinessUnits>
 }

@@ -93,7 +93,8 @@ class BusinessUnitControllerTest {
             id = businessUnitId,
             name = "Test Business Unit",
             location = "Test Location",
-            description = "Test Description"
+            description = "Test Description",
+            companyId = businessUnit.companyId
         )
 
         coEvery { businessUnitService.createBusinessUnit(any()) } returns businessUnit
