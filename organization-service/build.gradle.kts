@@ -19,54 +19,31 @@ repositories {
 }
 
 dependencies {
-	// Exclude default logging from Spring Boot starters
-	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc") {
-		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-	}
-	implementation("org.springframework.boot:spring-boot-starter-webflux") {
-		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-	}
-	implementation("org.springframework.boot:spring-boot-starter-actuator") {
-		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-	}
+	// Spring Boot starters with default logging
+	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	
 	// Add Spring Security and JWT dependencies
-	implementation("org.springframework.boot:spring-boot-starter-security") {
-		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-	}
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.security:spring-security-oauth2-resource-server")
 	implementation("org.springframework.security:spring-security-oauth2-jose")
-	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server") {
-		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-	}
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	
 	// Add Spring AOP for role validation aspects
-	implementation("org.springframework.boot:spring-boot-starter-aop") {
-		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-	}
-	
-	// Add Spring Boot Log4j2 starter 
-	implementation("org.springframework.boot:spring-boot-starter-log4j2")
+	implementation("org.springframework.boot:spring-boot-starter-aop")
 	
 	implementation("io.micrometer:micrometer-registry-prometheus")
 	implementation("io.micrometer:micrometer-observation")
-	implementation("org.springframework.kafka:spring-kafka") {
-		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-	}
+	implementation("org.springframework.kafka:spring-kafka")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.flywaydb:flyway-database-postgresql")
 	
-	// Logging - keep only kotlin-logging
+	// Kotlin logging that works with Logback
 	implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
-	// For async logging
-	implementation("com.lmax:disruptor:4.0.0")
-	// For DisruptorBlockingQueue
-	implementation("com.conversantmedia:disruptor:1.2.19")
-	// JSON logging format for Elasticsearch
-	implementation("org.apache.logging.log4j:log4j-layout-template-json:2.20.0")
 	
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
@@ -79,9 +56,7 @@ dependencies {
 	// Add PostgreSQL JDBC driver for Flyway
 	implementation("org.postgresql:postgresql")
 
-	testImplementation("org.springframework.boot:spring-boot-starter-test") {
-		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-	}
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")

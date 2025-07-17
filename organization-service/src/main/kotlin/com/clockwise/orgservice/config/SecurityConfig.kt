@@ -45,6 +45,8 @@ class SecurityConfig {
                     .pathMatchers("/actuator/**").permitAll()
                     .pathMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .pathMatchers(HttpMethod.OPTIONS).permitAll()
+                    // Allow address endpoint for location-based clock-in functionality
+                    .pathMatchers(HttpMethod.GET, "/v1/business-units/*/address").permitAll()
                     // Company endpoints - Role hierarchy: admin > manager > employee
                     .pathMatchers(HttpMethod.POST, "/v1/companies").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.PUT, "/v1/companies/**").hasAnyRole("admin", "manager")

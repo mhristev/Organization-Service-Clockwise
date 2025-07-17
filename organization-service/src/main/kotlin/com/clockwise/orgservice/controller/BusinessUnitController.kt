@@ -2,8 +2,10 @@ package com.clockwise.orgservice.controller
 
 import com.clockwise.orgservice.domain.BusinessUnit
 import com.clockwise.orgservice.domain.dto.BusinessUnitDto
+import com.clockwise.orgservice.domain.dto.BusinessUnitAddressDto
 import com.clockwise.orgservice.service.BusinessUnitService
 import com.clockwise.orgservice.toBusinessUnitDto
+import com.clockwise.orgservice.toBusinessUnitAddressDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
@@ -89,5 +91,32 @@ class BusinessUnitController(
         logger.info("User ${authentication.name} requested to delete business unit: $id")
         businessUnitService.deleteBusinessUnit(id)
         return ResponseEntity.noContent().build()
+    }
+
+    @GetMapping("/{id}/address")
+    suspend fun getBusinessUnitAddress(
+        @PathVariable id: String,
+        authentication: Authentication?
+    ): ResponseEntity<BusinessUnitAddressDto> {
+        if (authentication != null) {
+            val userInfo = extractUserInfo(authentication)
+            logger.info { "User ${userInfo["email"]} requested address for business unit with ID: $id" }
+        } else {
+            logger.info { "Anonymous request for business unit address with ID: $id" }
+        }
+        
+        val businessUnit = businessUnitService.getBusinessUnitById(id)
+        return if (businessUnit != null) {
+            // Validate that the business unit has location data
+            if (businessUnit.latitude != null && businessUnit.longitude != null) {
+                ResponseEntity.ok(businessUnit.toBusinessUnitAddressDto())
+            } else {
+                logger.warn { "Business unit $id exists but has no location data" }
+                ResponseEntity.notFound().build()
+            }
+        } else {
+            logger.warn { "Business unit with ID $id not found" }
+            ResponseEntity.notFound().build()
+        }
     }
 }

@@ -16,7 +16,6 @@ services:
       - SPRING_FLYWAY_USER=postgres
       - SPRING_FLYWAY_PASSWORD=changemeinprod!
       - KAFKA_BOOTSTRAP_SERVERS=kafka-1:9092
-      - LOGGING_CONFIG=classpath:log4j2.xml
       - LOGGING_FILE_PATH=/app/logs
     volumes:
       - org-service-logs:/app/logs
