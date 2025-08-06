@@ -57,6 +57,11 @@ class SecurityConfig {
                     .pathMatchers(HttpMethod.POST, "/v1/business-units/*/consumption-items").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.PUT, "/v1/business-units/*/consumption-items/**").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.DELETE, "/v1/business-units/*/consumption-items/**").hasAnyRole("admin", "manager")
+                    // Consumption record endpoints - employees can record, managers can view all
+                    .pathMatchers(HttpMethod.POST, "/v1/consumption-records").hasAnyRole("admin", "manager", "employee")
+                    .pathMatchers(HttpMethod.POST, "/v1/consumption-records/bulk").hasAnyRole("admin", "manager", "employee")
+                    .pathMatchers(HttpMethod.GET, "/v1/consumption-records/business-unit/**").hasAnyRole("admin", "manager")
+                    .pathMatchers(HttpMethod.GET, "/v1/consumption-records/work-session/**").hasAnyRole("admin", "manager", "employee")
                     // Business unit endpoints - Role hierarchy: admin > manager > employee
                     .pathMatchers(HttpMethod.GET, "/v1/business-units").hasAnyRole("admin", "manager", "employee")
                     .pathMatchers(HttpMethod.GET, "/v1/business-units/**").hasAnyRole("admin", "manager", "employee")
