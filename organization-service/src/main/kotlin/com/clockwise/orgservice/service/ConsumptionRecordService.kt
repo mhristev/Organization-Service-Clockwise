@@ -17,7 +17,8 @@ private val logger = KotlinLogging.logger {}
 @Service
 class ConsumptionRecordService(
     private val consumptionRecordRepository: ConsumptionRecordRepository,
-    private val consumptionItemRepository: ConsumptionItemRepository
+    private val consumptionItemRepository: ConsumptionItemRepository,
+    private val userInfoKafkaService: UserInfoKafkaService
 ) {
     
     suspend fun recordConsumption(userId: String, createDto: CreateConsumptionRecordDto): ConsumptionRecordDto {
@@ -27,12 +28,33 @@ class ConsumptionRecordService(
         val consumptionItem = consumptionItemRepository.findById(createDto.consumptionItemId)
             ?: throw IllegalArgumentException("Consumption item not found with ID: ${createDto.consumptionItemId}")
         
+        // Fetch user info via Kafka
+        var userFirstName: String? = null
+        var userLastName: String? = null
+        
+        try {
+            logger.info { "Requesting user info for userId: $userId" }
+            val userInfoResponse = userInfoKafkaService.requestUserInfo(userId).get()
+            
+            if (userInfoResponse.found) {
+                userFirstName = userInfoResponse.firstName
+                userLastName = userInfoResponse.lastName
+                logger.info { "Retrieved user info: ${userInfoResponse.firstName} ${userInfoResponse.lastName}" }
+            } else {
+                logger.warn { "User not found in User Service for userId: $userId" }
+            }
+        } catch (e: Exception) {
+            logger.error(e) { "Failed to fetch user info for userId: $userId, continuing without user names" }
+        }
+        
         val record = ConsumptionRecord(
             consumptionItemId = createDto.consumptionItemId,
             userId = userId,
             workSessionId = createDto.workSessionId,
             quantity = createDto.quantity,
-            consumedAt = LocalDateTime.now()
+            consumedAt = LocalDateTime.now(),
+            userFirstName = userFirstName,
+            userLastName = userLastName
         )
         
         val savedRecord = consumptionRecordRepository.save(record)
@@ -45,7 +67,9 @@ class ConsumptionRecordService(
             userId = savedRecord.userId,
             workSessionId = savedRecord.workSessionId,
             quantity = savedRecord.quantity,
-            consumedAt = savedRecord.consumedAt
+            consumedAt = savedRecord.consumedAt,
+            userFirstName = savedRecord.userFirstName,
+            userLastName = savedRecord.userLastName
         )
     }
     
@@ -105,7 +129,9 @@ class ConsumptionRecordService(
             userId = record.userId,
             workSessionId = record.workSessionId,
             quantity = record.quantity,
-            consumedAt = record.consumedAt
+            consumedAt = record.consumedAt,
+            userFirstName = record.userFirstName,
+            userLastName = record.userLastName
         )
     }
 }

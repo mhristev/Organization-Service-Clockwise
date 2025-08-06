@@ -13,5 +13,7 @@ data class ConsumptionRecord(
     @Column("user_id") val userId: String,
     @Column("work_session_id") val workSessionId: String,
     val quantity: BigDecimal,
-    @Column("consumed_at") val consumedAt: LocalDateTime = LocalDateTime.now()
+    @Column("consumed_at") val consumedAt: LocalDateTime = LocalDateTime.now(),
+    @Column("user_first_name") val userFirstName: String? = null,
+    @Column("user_last_name") val userLastName: String? = null
 )

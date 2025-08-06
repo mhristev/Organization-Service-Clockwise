@@ -12,7 +12,9 @@ data class ConsumptionRecordDto(
     val workSessionId: String,
     val quantity: BigDecimal,
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    val consumedAt: LocalDateTime
+    val consumedAt: LocalDateTime,
+    val userFirstName: String?,
+    val userLastName: String?
 )
 
 data class CreateConsumptionRecordDto(
