@@ -3,6 +3,8 @@ package com.clockwise.orgservice.controller
 import com.clockwise.orgservice.domain.BusinessUnit
 import com.clockwise.orgservice.domain.dto.BusinessUnitDto
 import com.clockwise.orgservice.domain.dto.BusinessUnitAddressDto
+import com.clockwise.orgservice.domain.dto.BusinessUnitPartialUpdateDto
+import com.clockwise.orgservice.domain.dto.BusinessUnitFullUpdateDto
 import com.clockwise.orgservice.service.BusinessUnitService
 import com.clockwise.orgservice.toBusinessUnitDto
 import com.clockwise.orgservice.toBusinessUnitAddressDto
@@ -116,6 +118,36 @@ class BusinessUnitController(
             }
         } else {
             logger.warn { "Business unit with ID $id not found" }
+            ResponseEntity.notFound().build()
+        }
+    }
+
+    @PatchMapping("/{id}/details")
+    suspend fun updateBusinessUnitDetails(
+        @PathVariable id: String,
+        @RequestBody updateDto: BusinessUnitPartialUpdateDto,
+        authentication: Authentication
+    ): ResponseEntity<BusinessUnitDto> {
+        logger.info("User ${authentication.name} requested to update details for business unit: $id")
+        return try {
+            val updatedBusinessUnit = businessUnitService.updateBusinessUnitPartial(id, updateDto)
+            ResponseEntity.ok(updatedBusinessUnit.toBusinessUnitDto())
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.notFound().build()
+        }
+    }
+
+    @PutMapping("/{id}/complete")
+    suspend fun updateBusinessUnitComplete(
+        @PathVariable id: String,
+        @RequestBody updateDto: BusinessUnitFullUpdateDto,
+        authentication: Authentication
+    ): ResponseEntity<BusinessUnitDto> {
+        logger.info("User ${authentication.name} requested to completely update business unit: $id")
+        return try {
+            val updatedBusinessUnit = businessUnitService.updateBusinessUnitFull(id, updateDto)
+            ResponseEntity.ok(updatedBusinessUnit.toBusinessUnitDto())
+        } catch (e: IllegalArgumentException) {
             ResponseEntity.notFound().build()
         }
     }

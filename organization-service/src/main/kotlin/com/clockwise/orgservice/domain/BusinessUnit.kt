@@ -13,5 +13,7 @@ data class BusinessUnit(
     @Column("company_id") val companyId: String,
     val latitude: Double? = null,
     val longitude: Double? = null,
-    @Column("allowed_radius") val allowedRadius: Double = 200.0 // Default 200 meters
+    @Column("allowed_radius") val allowedRadius: Double = 200.0, // Default 200 meters
+    @Column("phone_number") val phoneNumber: String? = null,
+    val email: String? = null
 )

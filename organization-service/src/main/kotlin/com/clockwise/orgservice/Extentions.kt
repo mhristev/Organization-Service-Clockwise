@@ -11,7 +11,9 @@ import com.clockwise.orgservice.domain.dto.CompanyWithBusinessUnitsDto
 fun Company.toCompanyDto() = CompanyDto(
     id = this.id,
     name = this.name,
-    description = this.description
+    description = this.description,
+    phoneNumber = this.phoneNumber,
+    email = this.email
 )
 
 fun BusinessUnit.toBusinessUnitDto() = BusinessUnitDto(
@@ -22,7 +24,9 @@ fun BusinessUnit.toBusinessUnitDto() = BusinessUnitDto(
     companyId = this.companyId,
     latitude = this.latitude,
     longitude = this.longitude,
-    allowedRadius = this.allowedRadius
+    allowedRadius = this.allowedRadius,
+    phoneNumber = this.phoneNumber,
+    email = this.email
 )
 
 fun BusinessUnit.toBusinessUnitAddressDto() = BusinessUnitAddressDto(
