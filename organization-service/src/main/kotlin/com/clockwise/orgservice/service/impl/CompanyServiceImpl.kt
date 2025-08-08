@@ -61,6 +61,8 @@ class CompanyServiceImpl(
                 id = company.id,
                 name = company.name,
                 description = company.description,
+                phoneNumber = company.phoneNumber,
+                email = company.email,
                 businessUnits = businessUnits
             )
         }

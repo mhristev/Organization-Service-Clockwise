@@ -42,5 +42,7 @@ fun CompanyWithBusinessUnits.toCompanyWithBusinessUnitsDto() = CompanyWithBusine
     id = this.id,
     name = this.name,
     description = this.description,
+    phoneNumber = this.phoneNumber,
+    email = this.email,
     businessUnits = this.businessUnits.map { it.toBusinessUnitDto() }
 )

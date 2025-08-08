@@ -25,6 +25,7 @@ data class BusinessUnitFullUpdateDto(
     val description: String,
     val latitude: Double?,
     val longitude: Double?,
+    val allowedRadius: Double?,
     val phoneNumber: String?,
     val email: String?
 )

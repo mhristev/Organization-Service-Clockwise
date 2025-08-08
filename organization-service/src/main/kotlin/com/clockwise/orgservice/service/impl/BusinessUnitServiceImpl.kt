@@ -80,6 +80,7 @@ class BusinessUnitServiceImpl(
             description = updateDto.description,
             latitude = coordinates.first,
             longitude = coordinates.second,
+            allowedRadius = updateDto.allowedRadius ?: existing.allowedRadius,
             phoneNumber = updateDto.phoneNumber,
             email = updateDto.email
         )
