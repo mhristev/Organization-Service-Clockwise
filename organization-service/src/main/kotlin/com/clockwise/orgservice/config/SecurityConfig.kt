@@ -67,6 +67,7 @@ class SecurityConfig {
                     .pathMatchers(HttpMethod.GET, "/v1/business-units/**").hasAnyRole("admin", "manager", "employee")
                     .pathMatchers(HttpMethod.POST, "/v1/business-units").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.PUT, "/v1/business-units/**").hasAnyRole("admin", "manager")
+                    .pathMatchers(HttpMethod.PATCH, "/v1/business-units/**").hasAnyRole("admin", "manager")
                     .pathMatchers(HttpMethod.DELETE, "/v1/business-units/**").hasRole("admin")
                     // All other authenticated users can read
                     .anyExchange().authenticated()
@@ -87,7 +88,7 @@ class SecurityConfig {
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
             allowedOriginPatterns = listOf("*")
-            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             allowedHeaders = listOf("*")
             allowCredentials = true
         }

@@ -42,6 +42,7 @@ class BusinessUnitServiceImpl(
             ?: throw IllegalArgumentException("Business unit with ID $id not found")
         
         val updated = existing.copy(
+            // Preserve exact formatting of description - no trimming or processing
             description = updateDto.description ?: existing.description,
             phoneNumber = updateDto.phoneNumber ?: existing.phoneNumber,
             email = updateDto.email ?: existing.email
@@ -77,6 +78,7 @@ class BusinessUnitServiceImpl(
         val updated = existing.copy(
             name = updateDto.name,
             location = updateDto.location,
+            // Preserve exact formatting of description - no trimming or processing
             description = updateDto.description,
             latitude = coordinates.first,
             longitude = coordinates.second,
